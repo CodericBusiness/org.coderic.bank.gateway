@@ -1,10 +1,8 @@
 name: Java CI with Maven
 
 on:
-  release:
-    types:
-      - created
-      - prereleased
+  push:
+    branches: [ "master" ]
 concurrency:
   group: github-pages
   cancel-in-progress: false
@@ -19,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: sed -i 's|http://localhost:8080/|${{ secrets.TOMCAT_HOST }}|g' pom.xml
-      - name: Set up JDK 21
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 22
           distribution: 'temurin'
           cache: maven
       - name: Test with Maven
@@ -36,10 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: sed -i 's|http://localhost:8080/|${{ secrets.TOMCAT_HOST }}|g' pom.xml
-      - name: Set up JDK 21
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 22
           distribution: 'temurin'
           cache: maven
       - name: Deploy site
@@ -57,14 +55,14 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://staging.coderic.org:8443/bank/gateway
+      url: https://backend.coderic.cloud/bank/gateway
     needs: build
     steps:
       - uses: actions/checkout@v4
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 22
           distribution: 'temurin'
           server-id: TomcatServer
           server-username: MAVEN_USERNAME
